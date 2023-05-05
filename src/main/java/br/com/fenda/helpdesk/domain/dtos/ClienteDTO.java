@@ -1,12 +1,10 @@
 package br.com.fenda.helpdesk.domain.dtos;
 
-import br.com.fenda.helpdesk.domain.Chamado;
 import br.com.fenda.helpdesk.domain.Cliente;
-import br.com.fenda.helpdesk.domain.Tecnico;
 import br.com.fenda.helpdesk.domain.enums.Perfil;
-import br.com.fenda.helpdesk.domain.enums.Prioridade;
-import br.com.fenda.helpdesk.domain.enums.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -18,20 +16,27 @@ public class ClienteDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     protected Integer id;
+    @NotNull(message = "O campo NOME é requerido")
     protected String nome;
+    @NotNull(message = "O campo CPF é requerido")
+    @CPF
     protected String cpf;
+    @NotNull(message = "O campo EMAIL é requerido")
     protected String email;
+    @NotNull(message = "O campo SENHA é requerido")
     protected String senha;
-
     protected Set<Integer> perfis = new HashSet<>();
-    @JsonFormat(pattern = "dd/MM/YYYY")
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     protected LocalDate dataCriacao = LocalDate.now();
 
     public ClienteDTO() {
         super();
+        addPerfil(Perfil.CLIENTE);
     }
 
     public ClienteDTO(Cliente cliente) {
+        super();
         this.id = cliente.getId();
         this.nome = cliente.getNome();
         this.cpf = cliente.getCpf();
@@ -39,6 +44,7 @@ public class ClienteDTO implements Serializable {
         this.senha = cliente.getSenha();
         this.perfis = cliente.getPerfis().stream().map(x -> x.getCodigo()).collect(Collectors.toSet());
         this.dataCriacao = cliente.getDataCriacao();
+        addPerfil(Perfil.CLIENTE);
     }
 
     public Integer getId() {
