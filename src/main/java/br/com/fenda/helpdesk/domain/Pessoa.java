@@ -3,6 +3,7 @@ package br.com.fenda.helpdesk.domain;
 import br.com.fenda.helpdesk.domain.enums.Perfil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ public abstract class Pessoa implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
     protected String nome;
+    @CPF
     @Column(unique = true)
     protected String cpf;
     @Column(unique = true)
@@ -27,7 +29,7 @@ public abstract class Pessoa implements Serializable {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "perfis")
     protected Set<Integer> perfis = new HashSet<>();
-    @JsonFormat(pattern = "dd/MM/YYYY")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     protected LocalDate dataCriacao = LocalDate.now();
 
     public Pessoa() {

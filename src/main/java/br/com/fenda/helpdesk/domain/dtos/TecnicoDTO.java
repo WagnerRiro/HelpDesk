@@ -3,6 +3,8 @@ package br.com.fenda.helpdesk.domain.dtos;
 import br.com.fenda.helpdesk.domain.Tecnico;
 import br.com.fenda.helpdesk.domain.enums.Perfil;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -13,17 +15,23 @@ import java.util.stream.Collectors;
 public class TecnicoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     protected Integer id;
+    @NotNull(message = "O campo NOME é obrigatorio")
     protected String nome;
+    @CPF
+    @NotNull(message = "O campo CPF é obrigatorio")
     protected String cpf;
+    @NotNull(message = "O campo EMAIL é obrigatorio")
     protected String email;
+    @NotNull(message = "O campo SENHA é obrigatorio")
     protected String senha;
 
-    protected Set<Integer> perfis = new HashSet<>();
-    @JsonFormat(pattern = "dd/MM/YYYY")
+    protected Set<java.lang.Integer> perfis = new HashSet<>();
+    @JsonFormat(pattern = "dd/MM/yyyy")
     protected LocalDate dataCriacao = LocalDate.now();
 
     public TecnicoDTO() {
         super();
+        addPerfil(Perfil.TECNICO);
     }
 
     public TecnicoDTO(Tecnico tecnico) {
@@ -34,6 +42,7 @@ public class TecnicoDTO implements Serializable {
         this.senha = tecnico.getSenha();
         this.perfis = tecnico.getPerfis().stream().map(x -> x.getCodigo()).collect(Collectors.toSet());
         this.dataCriacao = tecnico.getDataCriacao();
+        addPerfil(Perfil.TECNICO);
     }
 
     public Integer getId() {
