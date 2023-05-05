@@ -1,19 +1,12 @@
 package br.com.fenda.helpdesk.domain.dtos;
 
 import br.com.fenda.helpdesk.domain.Chamado;
-import br.com.fenda.helpdesk.domain.Cliente;
-import br.com.fenda.helpdesk.domain.Tecnico;
-import br.com.fenda.helpdesk.domain.enums.Perfil;
-import br.com.fenda.helpdesk.domain.enums.Prioridade;
-import br.com.fenda.helpdesk.domain.enums.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 public class ChamadoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -22,12 +15,20 @@ public class ChamadoDTO implements Serializable {
     private LocalDate dataAbertura = LocalDate.now();
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataFechamento;
-    private Prioridade prioridade;
-    private Status status;
+    @NotNull(message = "O campo PRIORIDADE é requerido")
+    private Integer prioridade;
+    @NotNull(message = "O campo STATUS é requerido")
+    private Integer status;
+    @NotNull(message = "O campo TITULO é requerido")
     private String titulo;
+    @NotNull(message = "O campo OBSERVAÇÕES é requerido")
     private String observacoes;
-    private Tecnico tecnico;
-    private Cliente cliente;
+    @NotNull(message = "O campo TECNICO é requerido")
+    private Integer tecnico;
+    @NotNull(message = "O campo CLIENTE é requerido")
+    private Integer cliente;
+    private String nomeTecnico;
+    private String nomeCliente;
 
     public ChamadoDTO() {
         super();
@@ -37,12 +38,14 @@ public class ChamadoDTO implements Serializable {
         this.id = chamado.getId();
         this.dataAbertura = chamado.getDataAbertura();
         this.dataFechamento = chamado.getDataFechamento();
-        this.prioridade = chamado.getPrioridade();
-        this.status = chamado.getStatus();
+        this.prioridade = chamado.getPrioridade().getCodigo();
+        this.status = chamado.getStatus().getCodigo();
         this.titulo = chamado.getTitulo();
         this.observacoes = chamado.getObservacoes();
-        this.tecnico = chamado.getTecnico();
-        this.cliente = chamado.getCliente();
+        this.tecnico = chamado.getTecnico().getId();
+        this.cliente = chamado.getCliente().getId();
+        this.nomeCliente = chamado.getCliente().getNome();
+        this.nomeTecnico = chamado.getTecnico().getNome();
     }
 
     public Integer getId() {
@@ -69,19 +72,19 @@ public class ChamadoDTO implements Serializable {
         this.dataFechamento = dataFechamento;
     }
 
-    public Prioridade getPrioridade() {
+    public Integer getPrioridade() {
         return prioridade;
     }
 
-    public void setPrioridade(Prioridade prioridade) {
+    public void setPrioridade(Integer prioridade) {
         this.prioridade = prioridade;
     }
 
-    public Status getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -101,19 +104,35 @@ public class ChamadoDTO implements Serializable {
         this.observacoes = observacoes;
     }
 
-    public Tecnico getTecnico() {
+    public Integer getTecnico() {
         return tecnico;
     }
 
-    public void setTecnico(Tecnico tecnico) {
+    public void setTecnico(Integer tecnico) {
         this.tecnico = tecnico;
     }
 
-    public Cliente getCliente() {
+    public Integer getCliente() {
         return cliente;
     }
 
-    public void setCliente(Cliente cliente) {
+    public void setCliente(Integer cliente) {
         this.cliente = cliente;
+    }
+
+    public String getNomeTecnico() {
+        return nomeTecnico;
+    }
+
+    public void setNomeTecnico(String nomeTecnico) {
+        this.nomeTecnico = nomeTecnico;
+    }
+
+    public String getNomeCliente() {
+        return nomeCliente;
+    }
+
+    public void setNomeCliente(String nomeCliente) {
+        this.nomeCliente = nomeCliente;
     }
 }
